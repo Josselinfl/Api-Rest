@@ -5,6 +5,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from config.config_variables import APP_TITLE, APP_VERSION, APP_DESCRIPTION
 from database.database import Base, engine
 from routes.routes import router as cooks_router
+from routes.recipes_routes import router as recipes_router
+from routes.genre_routes import router as genres_router
 
 
 @asynccontextmanager
@@ -39,6 +41,8 @@ app.add_middleware(
 # Registrar el router de recetas
 app.include_router(cooks_router)
 
+app.include_router(recipes_router)
+app.include_router(genres_router)
 
 @app.get("/", tags=["Health Check"])
 def read_root():

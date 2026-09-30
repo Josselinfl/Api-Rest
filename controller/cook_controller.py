@@ -5,7 +5,7 @@ from sqlalchemy.orm import session
 
 from model.cook_model import Book
 from schema.cook_schema import cookCreate
-
+from model.genre_model import Genre
 
 def get_all(db:session,skip:int = 0, limit: int = 100)->List[Book]:
     try:
@@ -18,15 +18,19 @@ def get_all(db:session,skip:int = 0, limit: int = 100)->List[Book]:
 
 
 
-def create_cook(db: session, cook_data: cookCreate) -> list:
+def create_cook(db: session, cook_data: cookCreate) -> Book:
 
 
     new_book = Book(
         title=cook_data.title,
-        recipes=cook_data.recipes,
+        recipes_id=cook_data.recipes_id,
         ingredients=cook_data.ingredients,
         is_available=cook_data.is_available,
     )
+    if cook_data.genre_ids:
+        genres = db.query(Genre).filter(Genre.id.in_(cook_data.genre_ids)).all()
+        new_book.genres = genres
+
 
     try:
         db.add(new_book)
